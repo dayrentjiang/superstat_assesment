@@ -20,6 +20,7 @@ export function SideBar({ isMobile }: { isMobile?: boolean }) {
             alt="Golden State Warriors"
             width={36}
             height={36}
+            priority
             className="rounded-md"
           />
           <div>

@@ -6,6 +6,7 @@ import { deleteVideo } from "@/actions/videos";
 import { format } from "date-fns";
 import { ChevronRight, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { LazyVideoThumbnail } from "@/components/videos/lazy-video-thumbnail";
 
 export function VideoCard({
   video,
@@ -40,12 +41,9 @@ export function VideoCard({
       >
         <div className="shrink-0 relative w-full sm:w-56 h-48 sm:h-32 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
           {video.video_url ? (
-            <video
+            <LazyVideoThumbnail
               src={`${video.video_url}#t=0.5`}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              preload="metadata"
-              muted
-              playsInline
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-50/50 font-medium">

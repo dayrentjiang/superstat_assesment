@@ -85,6 +85,8 @@ function PlayerHeader({ player }: { player: Player }) {
 
   const displayAvatar = avatarPreview ?? currentPlayer.avatar_url;
 
+  const isPreviewBlob = !!avatarPreview;
+
   return (
     <div className="flex items-center gap-4">
       <div className="relative">
@@ -94,7 +96,9 @@ function PlayerHeader({ player }: { player: Player }) {
             alt={currentPlayer.name}
             width={80}
             height={80}
-            unoptimized
+            sizes="80px"
+            priority
+            unoptimized={isPreviewBlob}
             className="h-20 w-20 rounded-full object-cover"
           />
         ) : (
