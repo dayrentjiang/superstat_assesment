@@ -1,57 +1,61 @@
-export const EVENT_TYPES = [
-  "2pt made",
-  "2pt missed",
-  "3pt made",
-  "3pt missed",
-  "Assist",
-  "Rebound",
-  "Turnover",
-  "Steal",
-  "Block",
-  "Foul",
-  "Free Throw Made",
-  "Free Throw Missed",
-  "Timeout",
-  "Jump Ball",
-  "Shotclock Violation",
-  "End of Quarter",
-  "End of Game",
-] as const;
+/** Canonical event-type identifiers — never use raw strings outside this file */
+export const EventType = {
+  TwoPtMade: "2pt made",
+  TwoPtMissed: "2pt missed",
+  ThreePtMade: "3pt made",
+  ThreePtMissed: "3pt missed",
+  Assist: "Assist",
+  Rebound: "Rebound",
+  Turnover: "Turnover",
+  Steal: "Steal",
+  Block: "Block",
+  Foul: "Foul",
+  FreeThrowMade: "Free Throw Made",
+  FreeThrowMissed: "Free Throw Missed",
+  Timeout: "Timeout",
+  JumpBall: "Jump Ball",
+  ShotclockViolation: "Shotclock Violation",
+  EndOfQuarter: "End of Quarter",
+  EndOfGame: "End of Game",
+} as const;
 
-export type EventType = (typeof EVENT_TYPES)[number];
+export type EventTypeValue = (typeof EventType)[keyof typeof EventType];
+
+/** All event types (used for dropdown) */
+export const EVENT_TYPES: readonly EventTypeValue[] = Object.values(EventType);
 
 /** Event types that belong to the team rather than a specific player */
-export const TEAM_EVENT_TYPES: ReadonlySet<string> = new Set([
-  "Timeout",
-  "Jump Ball",
-  "Shotclock Violation",
-  "End of Quarter",
-  "End of Game",
+export const TEAM_EVENT_TYPES: ReadonlySet<EventTypeValue> = new Set([
+  EventType.Timeout,
+  EventType.JumpBall,
+  EventType.ShotclockViolation,
+  EventType.EndOfQuarter,
+  EventType.EndOfGame,
 ]);
 
 /** Points scored per occurrence of each event type */
-export const POINTS_MAP: Partial<Record<EventType, number>> = {
-  "2pt made": 2,
-  "3pt made": 3,
-  "Free Throw Made": 1,
+export const POINTS_MAP: Partial<Record<EventTypeValue, number>> = {
+  [EventType.TwoPtMade]: 2,
+  [EventType.ThreePtMade]: 3,
+  [EventType.FreeThrowMade]: 1,
 };
 
 /** Stat category for display grouping */
-export const STAT_CATEGORIES: Record<string, EventType[]> = {
-  "FG Made": ["2pt made", "3pt made"],
-  "FG Missed": ["2pt missed", "3pt missed"],
-  "2PT Made": ["2pt made"],
-  "2PT Missed": ["2pt missed"],
-  "3PT Made": ["3pt made"],
-  "3PT Missed": ["3pt missed"],
-  "FT Made": ["Free Throw Made"],
-  "FT Missed": ["Free Throw Missed"],
-  AST: ["Assist"],
-  REB: ["Rebound"],
-  STL: ["Steal"],
-  BLK: ["Block"],
-  TOV: ["Turnover"],
-  FLS: ["Foul"],
+export const STAT_CATEGORIES: Record<string, EventTypeValue[]> = {
+  "FG Made": [EventType.TwoPtMade, EventType.ThreePtMade],
+  "FG Missed": [EventType.TwoPtMissed, EventType.ThreePtMissed],
+  "2PT Made": [EventType.TwoPtMade],
+  "2PT Missed": [EventType.TwoPtMissed],
+  "3PT Made": [EventType.ThreePtMade],
+  "3PT Missed": [EventType.ThreePtMissed],
+  "FT Made": [EventType.FreeThrowMade],
+  "FT Missed": [EventType.FreeThrowMissed],
+  AST: [EventType.Assist],
+  REB: [EventType.Rebound],
+  STL: [EventType.Steal],
+  BLK: [EventType.Block],
+  TOV: [EventType.Turnover],
+  FLS: [EventType.Foul],
 };
 
 export function formatTimestamp(seconds: number): string {

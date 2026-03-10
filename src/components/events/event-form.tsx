@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Player, Event } from "@/types";
-import { EVENT_TYPES, TEAM_EVENT_TYPES } from "@/constants";
+import { EVENT_TYPES, EventTypeValue, TEAM_EVENT_TYPES } from "@/constants";
 import { createEvent } from "@/actions/events";
 import { AddPlayerDialog } from "@/components/players/add-player-dialog";
 
@@ -22,7 +22,7 @@ export function EventForm({
   onEventCreated,
   onPlayerAdded,
 }: EventFormProps) {
-  const [eventType, setEventType] = useState<string>(EVENT_TYPES[0]);
+  const [eventType, setEventType] = useState<EventTypeValue>(EVENT_TYPES[0]);
   const [playerId, setPlayerId] = useState<string>(players[0]?.id ?? "");
   const isTeamEvent = TEAM_EVENT_TYPES.has(eventType);
   const [isPending, startTransition] = useTransition();
@@ -93,7 +93,7 @@ export function EventForm({
         </label>
         <select
           value={eventType}
-          onChange={(e) => setEventType(e.target.value)}
+          onChange={(e) => setEventType(e.target.value as EventTypeValue)}
           className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all font-medium text-gray-900"
         >
           {EVENT_TYPES.map((type) => (

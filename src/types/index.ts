@@ -1,3 +1,5 @@
+import { EventTypeValue } from "@/constants";
+
 export interface Video {
   id: string;
   title: string;
@@ -19,7 +21,7 @@ export interface Event {
   id: string;
   video_id: string;
   player_id: string | null;
-  event_type: string;
+  event_type: EventTypeValue;
   timestamp: number;
   created_at: string;
   player?: Player;
@@ -37,7 +39,7 @@ export interface PlayerStatsRow {
   id: string;
   player_id: string;
   video_id: string;
-  event_type: string;
+  event_type: EventTypeValue;
   count: number;
 }
 

@@ -1,6 +1,7 @@
 "use server";
 
 import { Event, PlayerGameRow } from "@/types";
+import { EventTypeValue } from "@/constants";
 import { revalidatePath } from "next/cache";
 import {
   findEventsByVideoId,
@@ -27,7 +28,7 @@ export async function getPlayerGames(
 export async function createEvent(
   videoId: string,
   playerId: string | null,
-  eventType: string,
+  eventType: EventTypeValue,
   timestamp: number,
 ): Promise<Event> {
   const event = await insertEvent(videoId, playerId, eventType, timestamp);
