@@ -22,3 +22,11 @@ export interface Event {
   created_at: string;
   player?: Player;
 }
+
+export interface Summary {
+  id: string;
+  video_id: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+}
