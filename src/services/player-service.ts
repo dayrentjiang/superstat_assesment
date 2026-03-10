@@ -1,5 +1,5 @@
 import { createServerClient } from "@/lib/supabase";
-import { Player } from "@/lib/types";
+import { Player } from "@/types";
 
 export async function findAllPlayers(): Promise<Player[]> {
   const supabase = createServerClient();

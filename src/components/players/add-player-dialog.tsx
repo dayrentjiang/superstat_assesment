@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useRef, useEffect } from "react";
 import Image from "next/image";
-import { Player } from "@/lib/types";
+import { Player } from "@/types";
 import { createPlayer } from "@/actions/players";
 import { useUpload } from "@/hooks/use-upload";
 import { UserPlus, Image as ImageIcon } from "lucide-react";

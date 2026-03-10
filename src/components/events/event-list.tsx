@@ -3,8 +3,8 @@
 import { useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Event } from "@/lib/types";
-import { formatTimestamp } from "@/lib/constants";
+import { Event } from "@/types";
+import { formatTimestamp } from "@/constants";
 import { deleteEvent } from "@/actions/events";
 
 interface EventListProps {
@@ -56,25 +56,29 @@ export function EventList({ events, videoId, onSeek, onEventDeleted }: EventList
                 </span>
               </td>
               <td className="py-2 pr-2">
-                <Link
-                  href={`/players/${event.player_id}`}
-                  className="flex items-center gap-1.5 hover:underline"
-                >
-                  {event.player?.avatar_url ? (
-                    <Image
-                      src={event.player.avatar_url}
-                      alt=""
-                      width={20}
-                      height={20}
-                      className="h-5 w-5 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="h-5 w-5 rounded-full bg-gray-200 flex items-center justify-center text-gray-400 text-[10px] font-medium">
-                      {(event.player?.name ?? "?").charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                  <span>{event.player?.name ?? "Unknown"}</span>
-                </Link>
+                {event.player_id ? (
+                  <Link
+                    href={`/players/${event.player_id}`}
+                    className="flex items-center gap-1.5 hover:underline"
+                  >
+                    {event.player?.avatar_url ? (
+                      <Image
+                        src={event.player.avatar_url}
+                        alt=""
+                        width={20}
+                        height={20}
+                        className="h-5 w-5 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-5 w-5 rounded-full bg-gray-200 flex items-center justify-center text-gray-400 text-[10px] font-medium">
+                        {(event.player?.name ?? "?").charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <span>{event.player?.name ?? "Unknown"}</span>
+                  </Link>
+                ) : (
+                  <span className="text-xs text-gray-500">Team</span>
+                )}
               </td>
               <td className="py-2">
                 <button

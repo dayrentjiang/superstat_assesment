@@ -1,11 +1,11 @@
 import { createServerClient } from "@/lib/supabase";
-import { PlayerGameRow, PlayerStats, PlayerStatsRow } from "@/lib/types";
-import { POINTS_MAP } from "@/lib/constants";
+import { PlayerGameRow, PlayerStats, PlayerStatsRow } from "@/types";
+import { EventType, EventTypeValue, POINTS_MAP } from "@/constants";
 
 export async function incrementPlayerStat(
   playerId: string,
   videoId: string,
-  eventType: string
+  eventType: EventTypeValue,
 ) {
   const supabase = createServerClient();
   const { data: existing } = await supabase
@@ -25,7 +25,12 @@ export async function incrementPlayerStat(
   } else {
     const { error } = await supabase
       .from("player_stats")
-      .insert({ player_id: playerId, video_id: videoId, event_type: eventType, count: 1 });
+      .insert({
+        player_id: playerId,
+        video_id: videoId,
+        event_type: eventType,
+        count: 1,
+      });
     if (error) throw error;
   }
 }
@@ -33,7 +38,7 @@ export async function incrementPlayerStat(
 export async function decrementPlayerStat(
   playerId: string,
   videoId: string,
-  eventType: string
+  eventType: EventTypeValue,
 ) {
   const supabase = createServerClient();
   const { data: stats } = await supabase
@@ -46,7 +51,10 @@ export async function decrementPlayerStat(
 
   if (stats) {
     if (stats.count <= 1) {
-      const { error } = await supabase.from("player_stats").delete().eq("id", stats.id);
+      const { error } = await supabase
+        .from("player_stats")
+        .delete()
+        .eq("id", stats.id);
       if (error) throw error;
     } else {
       const { error } = await supabase
@@ -58,7 +66,9 @@ export async function decrementPlayerStat(
   }
 }
 
-export async function getAggregatedStats(playerId: string): Promise<PlayerStats> {
+export async function getAggregatedStats(
+  playerId: string,
+): Promise<PlayerStats> {
   const supabase = createServerClient();
   const { data, error } = await supabase
     .from("player_stats")
@@ -73,9 +83,15 @@ export async function getAggregatedStats(playerId: string): Promise<PlayerStats>
 
   if (totalGames === 0) {
     return {
-      totalGames: 0, totalPoints: 0, ppg: 0,
-      fgPct: null, twoPtPct: null, threePtPct: null, ftPct: null,
-      apg: 0, rpg: 0,
+      totalGames: 0,
+      totalPoints: 0,
+      ppg: 0,
+      fgPct: null,
+      twoPtPct: null,
+      threePtPct: null,
+      ftPct: null,
+      apg: 0,
+      rpg: 0,
     };
   }
 
@@ -84,20 +100,20 @@ export async function getAggregatedStats(playerId: string): Promise<PlayerStats>
     counts[r.event_type] = (counts[r.event_type] || 0) + r.count;
   }
 
-  const get = (type: string) => counts[type] || 0;
+  const get = (type: EventTypeValue) => counts[type] || 0;
 
-  const twoPtMade = get("2pt made");
-  const twoPtMissed = get("2pt missed");
-  const threePtMade = get("3pt made");
-  const threePtMissed = get("3pt missed");
-  const ftMade = get("Free Throw Made");
-  const ftMissed = get("Free Throw Missed");
-  const assists = get("Assist");
-  const rebounds = get("Rebound");
+  const twoPtMade = get(EventType.TwoPtMade);
+  const twoPtMissed = get(EventType.TwoPtMissed);
+  const threePtMade = get(EventType.ThreePtMade);
+  const threePtMissed = get(EventType.ThreePtMissed);
+  const ftMade = get(EventType.FreeThrowMade);
+  const ftMissed = get(EventType.FreeThrowMissed);
+  const assists = get(EventType.Assist);
+  const rebounds = get(EventType.Rebound);
 
   let totalPoints = 0;
   for (const r of rows) {
-    const pts = (POINTS_MAP as Record<string, number>)[r.event_type] ?? 0;
+    const pts = POINTS_MAP[r.event_type] ?? 0;
     totalPoints += r.count * pts;
   }
 
@@ -123,7 +139,9 @@ export async function getAggregatedStats(playerId: string): Promise<PlayerStats>
   };
 }
 
-export async function getPlayerGames(playerId: string): Promise<PlayerGameRow[]> {
+export async function getPlayerGames(
+  playerId: string,
+): Promise<PlayerGameRow[]> {
   const supabase = createServerClient();
   const { data, error } = await supabase
     .from("player_stats")
@@ -132,7 +150,9 @@ export async function getPlayerGames(playerId: string): Promise<PlayerGameRow[]>
 
   if (error) throw error;
 
-  const rows = data as (PlayerStatsRow & { video: { title: string; created_at: string } })[];
+  const rows = data as (PlayerStatsRow & {
+    video: { title: string; created_at: string };
+  })[];
 
   const byVideo = new Map<string, PlayerGameRow>();
   for (const row of rows) {
@@ -142,21 +162,29 @@ export async function getPlayerGames(playerId: string): Promise<PlayerGameRow[]>
         video_id: row.video_id,
         video_title: row.video.title,
         video_created_at: row.video.created_at,
-        pts: 0, ast: 0, reb: 0, stl: 0, blk: 0, tov: 0, fls: 0,
+        pts: 0,
+        ast: 0,
+        reb: 0,
+        stl: 0,
+        blk: 0,
+        tov: 0,
+        fls: 0,
       };
       byVideo.set(row.video_id, game);
     }
-    const points = (POINTS_MAP as Record<string, number>)[row.event_type] ?? 0;
+    const points = POINTS_MAP[row.event_type] ?? 0;
     game.pts += row.count * points;
-    if (row.event_type === "Assist") game.ast += row.count;
-    if (row.event_type === "Rebound") game.reb += row.count;
-    if (row.event_type === "Steal") game.stl += row.count;
-    if (row.event_type === "Block") game.blk += row.count;
-    if (row.event_type === "Turnover") game.tov += row.count;
-    if (row.event_type === "Foul") game.fls += row.count;
+    if (row.event_type === EventType.Assist) game.ast += row.count;
+    if (row.event_type === EventType.Rebound) game.reb += row.count;
+    if (row.event_type === EventType.Steal) game.stl += row.count;
+    if (row.event_type === EventType.Block) game.blk += row.count;
+    if (row.event_type === EventType.Turnover) game.tov += row.count;
+    if (row.event_type === EventType.Foul) game.fls += row.count;
   }
 
   return Array.from(byVideo.values()).sort(
-    (a, b) => new Date(b.video_created_at).getTime() - new Date(a.video_created_at).getTime()
+    (a, b) =>
+      new Date(b.video_created_at).getTime() -
+      new Date(a.video_created_at).getTime(),
   );
 }

@@ -1,6 +1,6 @@
 "use server";
 
-import { Video } from "@/lib/types";
+import { Video } from "@/types";
 import { revalidatePath } from "next/cache";
 import {
   findAllVideos,

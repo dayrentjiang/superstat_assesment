@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Video, Player, Event } from "@/lib/types";
+import { Video, Player, Event } from "@/types";
 import { VideoPlayer } from "./video-player";
 import { EventForm } from "@/components/events/event-form";
 import { EventList } from "@/components/events/event-list";

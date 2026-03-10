@@ -1,6 +1,6 @@
 "use server";
 
-import { Player, PlayerStats } from "@/lib/types";
+import { Player, PlayerStats } from "@/types";
 import { revalidatePath } from "next/cache";
 import {
   findAllPlayers,

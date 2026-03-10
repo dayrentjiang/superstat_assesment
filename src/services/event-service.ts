@@ -1,5 +1,6 @@
 import { createServerClient } from "@/lib/supabase";
-import { Event } from "@/lib/types";
+import { Event } from "@/types";
+import { EventTypeValue } from "@/constants";
 
 export async function findEventsByVideoId(videoId: string): Promise<Event[]> {
   const supabase = createServerClient();
@@ -27,9 +28,9 @@ export async function findEventById(id: string) {
 
 export async function insertEvent(
   videoId: string,
-  playerId: string,
-  eventType: string,
-  timestamp: number
+  playerId: string | null,
+  eventType: EventTypeValue,
+  timestamp: number,
 ): Promise<Event> {
   const supabase = createServerClient();
   const { data, error } = await supabase

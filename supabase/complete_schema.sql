@@ -39,7 +39,7 @@ CREATE INDEX idx_players_deleted_at ON players(deleted_at);
 CREATE TABLE events (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   video_id UUID NOT NULL REFERENCES videos(id) ON DELETE CASCADE,
-  player_id UUID NOT NULL REFERENCES players(id) ON DELETE RESTRICT,
+  player_id UUID REFERENCES players(id) ON DELETE RESTRICT,
   event_type TEXT NOT NULL,
   timestamp DOUBLE PRECISION NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now()
