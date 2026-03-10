@@ -33,6 +33,8 @@ Scoring rules — calculate points strictly:
 - Missed shots = 0 points
 Total points = (count of 2pt made × 2) + (count of 3pt made × 3) + (count of Free Throw Made × 1). Double-check your arithmetic.
 
+Important: timestamps in the event log represent elapsed time from the START of the video (e.g. 0:02 means 2 seconds into the video, NOT the last 2 seconds of the game). Do NOT interpret timestamps as game clock countdowns. Do NOT infer game situation (e.g. "buzzer-beater", "closing seconds") from timestamps alone.
+
 Keep it concise and insightful. No filler. Only reference data present in the event log.`;
 
 export async function generateSummary(
