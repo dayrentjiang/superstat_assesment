@@ -146,7 +146,7 @@ export function EventForm({ videoId, players, getCurrentTime, onEventCreated, on
             >
               {players.map((player) => (
                 <option key={player.id} value={player.id}>
-                  {player.jersey_number != null ? `#${player.jersey_number} ` : ""}{player.name}
+                  {player.name}
                 </option>
               ))}
             </select>

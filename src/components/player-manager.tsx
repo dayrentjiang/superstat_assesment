@@ -8,7 +8,7 @@ import { useUpload } from "@/hooks/use-upload";
 export function PlayerManager({ initialPlayers }: { initialPlayers: Player[] }) {
   const [players, setPlayers] = useState(initialPlayers);
   const [name, setName] = useState("");
-  const [jerseyNumber, setJerseyNumber] = useState("");
+  const [position, setPosition] = useState("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [error, setError] = useState("");
@@ -38,11 +38,10 @@ export function PlayerManager({ initialPlayers }: { initialPlayers: Player[] }) 
           if (!avatarUrl) throw new Error(avatarUpload.error ?? "Avatar upload failed");
         }
 
-        const jersey = jerseyNumber ? parseInt(jerseyNumber, 10) : null;
-        const player = await createPlayer(name.trim(), jersey, avatarUrl);
+        const player = await createPlayer(name.trim(), avatarUrl, position || null);
         setPlayers((prev) => [...prev, player].sort((a, b) => a.name.localeCompare(b.name)));
         setName("");
-        setJerseyNumber("");
+        setPosition("");
         setAvatarFile(null);
         setAvatarPreview(null);
       } catch (err) {
@@ -73,15 +72,18 @@ export function PlayerManager({ initialPlayers }: { initialPlayers: Player[] }) 
             className="flex-1 rounded border px-3 py-2 text-sm"
             placeholder="Player name"
           />
-          <input
-            type="number"
-            value={jerseyNumber}
-            onChange={(e) => setJerseyNumber(e.target.value)}
-            className="w-20 rounded border px-3 py-2 text-sm"
-            placeholder="#"
-            min="0"
-            max="99"
-          />
+          <select
+            value={position}
+            onChange={(e) => setPosition(e.target.value)}
+            className="w-28 rounded border px-3 py-2 text-sm"
+          >
+            <option value="">Position</option>
+            <option value="PG">PG</option>
+            <option value="SG">SG</option>
+            <option value="SF">SF</option>
+            <option value="PF">PF</option>
+            <option value="C">C</option>
+          </select>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 flex-1">
@@ -133,8 +135,8 @@ export function PlayerManager({ initialPlayers }: { initialPlayers: Player[] }) 
               )}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{player.name}</p>
-                {player.jersey_number != null && (
-                  <p className="text-xs text-gray-500">#{player.jersey_number}</p>
+                {player.position && (
+                  <p className="text-xs text-gray-500">{player.position}</p>
                 )}
               </div>
               <button

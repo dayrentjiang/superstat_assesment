@@ -9,7 +9,6 @@ export interface Player {
   id: string;
   name: string;
   avatar_url: string | null;
-  jersey_number: number | null;
   position: string | null;
   created_at: string;
 }

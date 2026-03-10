@@ -17,13 +17,13 @@ export async function getPlayers(): Promise<Player[]> {
 
 export async function createPlayer(
   name: string,
-  jerseyNumber?: number | null,
-  avatarUrl?: string | null
+  avatarUrl?: string | null,
+  position?: string | null
 ): Promise<Player> {
   const supabase = createServerClient();
   const insert: Record<string, unknown> = { name: name.trim() };
-  if (jerseyNumber != null) insert.jersey_number = jerseyNumber;
   if (avatarUrl) insert.avatar_url = avatarUrl;
+  if (position) insert.position = position;
 
   const { data, error } = await supabase
     .from("players")
