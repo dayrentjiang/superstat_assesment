@@ -21,7 +21,8 @@ export function useUpload(bucket: string) {
       setState({ uploading: true, progress: 0, error: null });
 
       try {
-        const fileName = `${Date.now()}-${file.name}`;
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const fileName = `${Date.now()}-${safeName}`;
         const { error: uploadError } = await supabase.storage
           .from(bucket)
           .upload(fileName, file, { contentType: file.type });
