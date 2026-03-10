@@ -15,11 +15,19 @@ export async function getPlayers(): Promise<Player[]> {
   return data as Player[];
 }
 
-export async function createPlayer(name: string): Promise<Player> {
+export async function createPlayer(
+  name: string,
+  avatarUrl?: string | null,
+  position?: string | null
+): Promise<Player> {
   const supabase = createServerClient();
+  const insert: Record<string, unknown> = { name: name.trim() };
+  if (avatarUrl) insert.avatar_url = avatarUrl;
+  if (position) insert.position = position;
+
   const { data, error } = await supabase
     .from("players")
-    .insert({ name: name.trim() })
+    .insert(insert)
     .select()
     .single();
 

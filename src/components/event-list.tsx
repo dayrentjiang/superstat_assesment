@@ -53,7 +53,22 @@ export function EventList({ events, videoId, onSeek, onEventDeleted }: EventList
                   {event.event_type}
                 </span>
               </td>
-              <td className="py-2 pr-2">{event.player?.name ?? "Unknown"}</td>
+              <td className="py-2 pr-2">
+                <div className="flex items-center gap-1.5">
+                  {event.player?.avatar_url ? (
+                    <img
+                      src={event.player.avatar_url}
+                      alt=""
+                      className="h-5 w-5 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-5 w-5 rounded-full bg-gray-200 flex items-center justify-center text-gray-400 text-[10px] font-medium">
+                      {(event.player?.name ?? "?").charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <span>{event.player?.name ?? "Unknown"}</span>
+                </div>
+              </td>
               <td className="py-2">
                 <button
                   onClick={() => handleDelete(event.id)}

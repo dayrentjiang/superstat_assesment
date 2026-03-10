@@ -8,6 +8,8 @@ export interface Video {
 export interface Player {
   id: string;
   name: string;
+  avatar_url: string | null;
+  position: string | null;
   created_at: string;
 }
 
