@@ -11,6 +11,7 @@ export interface Player {
   avatar_url: string | null;
   position: string | null;
   created_at: string;
+  deleted_at: string | null;
 }
 
 export interface Event {

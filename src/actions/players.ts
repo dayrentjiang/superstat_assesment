@@ -6,6 +6,7 @@ import {
   findAllPlayers,
   findPlayerById,
   insertPlayer,
+  updatePlayer as updatePlayerInDb,
   removePlayer,
 } from "@/services/player-service";
 import { getAggregatedStats } from "@/services/player-stats-service";
@@ -21,6 +22,16 @@ export async function createPlayer(
 ): Promise<Player> {
   const player = await insertPlayer(name, avatarUrl, position);
   revalidatePath("/players");
+  return player;
+}
+
+export async function updatePlayer(
+  id: string,
+  fields: { name?: string; position?: string | null; avatar_url?: string | null },
+): Promise<Player> {
+  const player = await updatePlayerInDb(id, fields);
+  revalidatePath("/players");
+  revalidatePath(`/players/${id}`);
   return player;
 }
 

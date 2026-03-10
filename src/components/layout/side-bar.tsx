@@ -8,10 +8,8 @@ export function SideBar({ isMobile }: { isMobile?: boolean }) {
 
   return (
     <aside
-      className={`w-64 bg-white border-r border-gray-200 flex-col ${
-        isMobile
-          ? "flex h-full"
-          : "hidden md:flex h-[calc(100vh-104px)] sticky top-26"
+      className={`w-64 bg-white border-r border-gray-200 flex-col shrink-0 ${
+        isMobile ? "flex h-full" : "hidden md:flex"
       }`}
     >
       <div className="p-4 border-b border-gray-100 mb-2 mt-4 md:mt-0">
