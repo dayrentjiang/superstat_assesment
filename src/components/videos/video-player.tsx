@@ -9,13 +9,15 @@ interface VideoPlayerProps {
 export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
   function VideoPlayer({ src }, ref) {
     return (
-      <video
-        ref={ref}
-        src={src}
-        controls
-        className="w-full rounded-lg bg-black"
-        preload="metadata"
-      />
+      <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center">
+        <video
+          ref={ref}
+          src={src}
+          controls
+          className="w-full h-full object-contain"
+          preload="metadata"
+        />
+      </div>
     );
   },
 );
