@@ -1,6 +1,6 @@
 "use server";
 
-import { Event, PlayerGameRow } from "@/lib/types";
+import { Event, PlayerGameRow } from "@/types";
 import { revalidatePath } from "next/cache";
 import {
   findEventsByVideoId,
@@ -26,15 +26,17 @@ export async function getPlayerGames(
 
 export async function createEvent(
   videoId: string,
-  playerId: string,
+  playerId: string | null,
   eventType: string,
   timestamp: number,
 ): Promise<Event> {
   const event = await insertEvent(videoId, playerId, eventType, timestamp);
-  await incrementPlayerStat(playerId, videoId, eventType);
+  if (playerId) {
+    await incrementPlayerStat(playerId, videoId, eventType);
+    revalidatePath(`/players/${playerId}`);
+  }
 
   revalidatePath(`/videos/${videoId}`);
-  revalidatePath(`/players/${playerId}`);
   return event;
 }
 
@@ -44,8 +46,10 @@ export async function deleteEvent(id: string, videoId: string): Promise<void> {
     throw new Error(`Event not found: ${id}`);
   }
   await removeEvent(id);
-  await decrementPlayerStat(event.player_id, videoId, event.event_type);
+  if (event.player_id) {
+    await decrementPlayerStat(event.player_id, videoId, event.event_type);
+    revalidatePath(`/players/${event.player_id}`);
+  }
 
   revalidatePath(`/videos/${videoId}`);
-  revalidatePath(`/players/${event.player_id}`);
 }

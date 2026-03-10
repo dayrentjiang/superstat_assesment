@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Player, PlayerStats, PlayerGameRow } from "@/lib/types";
+import { Player, PlayerStats, PlayerGameRow } from "@/types";
 import { updatePlayer } from "@/actions/players";
 import { useUpload } from "@/hooks/use-upload";
 

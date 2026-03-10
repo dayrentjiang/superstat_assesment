@@ -2,8 +2,8 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Player, Event } from "@/lib/types";
-import { EVENT_TYPES } from "@/lib/constants";
+import { Player, Event } from "@/types";
+import { EVENT_TYPES, TEAM_EVENT_TYPES } from "@/constants";
 import { createEvent } from "@/actions/events";
 import { AddPlayerDialog } from "@/components/players/add-player-dialog";
 
@@ -24,12 +24,13 @@ export function EventForm({
 }: EventFormProps) {
   const [eventType, setEventType] = useState<string>(EVENT_TYPES[0]);
   const [playerId, setPlayerId] = useState<string>(players[0]?.id ?? "");
+  const isTeamEvent = TEAM_EVENT_TYPES.has(eventType);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
 
   function handleTag() {
-    if (!playerId || !eventType) return;
+    if (!eventType || (!isTeamEvent && !playerId)) return;
 
     const timestamp = getCurrentTime();
     setError("");
@@ -38,7 +39,7 @@ export function EventForm({
       try {
         const event = await createEvent(
           videoId,
-          playerId,
+          isTeamEvent ? null : playerId,
           eventType,
           timestamp,
         );
@@ -103,37 +104,39 @@ export function EventForm({
         </select>
       </div>
 
-      <div className="w-full sm:flex-1 relative">
-        <div className="flex items-center justify-between mb-1.5">
-          <label className="text-xs font-bold text-gray-700 tracking-wide uppercase">
-            Player
-          </label>
-          <button
-            type="button"
-            onClick={() => setDialogOpen(true)}
-            className="text-[10px] font-bold text-teal-600 hover:text-teal-800 uppercase tracking-widest bg-teal-50 px-2 py-0.5 rounded transition-colors"
-          >
-            + New
-          </button>
-        </div>
+      {!isTeamEvent && (
+        <div className="w-full sm:flex-1 relative">
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs font-bold text-gray-700 tracking-wide uppercase">
+              Player
+            </label>
+            <button
+              type="button"
+              onClick={() => setDialogOpen(true)}
+              className="text-[10px] font-bold text-teal-600 hover:text-teal-800 uppercase tracking-widest bg-teal-50 px-2 py-0.5 rounded transition-colors"
+            >
+              + New
+            </button>
+          </div>
 
-        <select
-          value={playerId}
-          onChange={(e) => setPlayerId(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all font-medium text-gray-900"
-        >
-          {players.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name} {p.position ? `(${p.position})` : ""}
-            </option>
-          ))}
-        </select>
-      </div>
+          <select
+            value={playerId}
+            onChange={(e) => setPlayerId(e.target.value)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all font-medium text-gray-900"
+          >
+            {players.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} {p.position ? `(${p.position})` : ""}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="w-full sm:w-auto shrink-0">
         <button
           onClick={handleTag}
-          disabled={isPending || !playerId}
+          disabled={isPending || (!isTeamEvent && !playerId)}
           className="w-full sm:w-32 rounded-lg bg-[#ccfbf1] text-teal-900 border border-[#bbf7d0] px-4 py-2.5 text-sm font-bold hover:bg-teal-100 hover:border-teal-200 transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed h-[42px]"
         >
           {isPending ? "Tagging..." : "Tag Event"}

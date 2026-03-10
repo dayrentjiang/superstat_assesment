@@ -1,7 +1,7 @@
 "use server";
 
-import { Event, Summary } from "@/lib/types";
-import { formatTimestamp } from "@/lib/constants";
+import { Event, Summary } from "@/types";
+import { formatTimestamp } from "@/constants";
 import { chat } from "@/lib/openai";
 import { revalidatePath } from "next/cache";
 import {

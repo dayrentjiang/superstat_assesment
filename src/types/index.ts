@@ -18,7 +18,7 @@ export interface Player {
 export interface Event {
   id: string;
   video_id: string;
-  player_id: string;
+  player_id: string | null;
   event_type: string;
   timestamp: number;
   created_at: string;

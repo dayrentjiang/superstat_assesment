@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Player } from "@/lib/types";
+import { Player } from "@/types";
 import { deletePlayer } from "@/actions/players";
 import { AddPlayerDialog } from "@/components/players/add-player-dialog";
 import {

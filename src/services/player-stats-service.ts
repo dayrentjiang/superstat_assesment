@@ -1,6 +1,6 @@
 import { createServerClient } from "@/lib/supabase";
-import { PlayerGameRow, PlayerStats, PlayerStatsRow } from "@/lib/types";
-import { POINTS_MAP } from "@/lib/constants";
+import { PlayerGameRow, PlayerStats, PlayerStatsRow } from "@/types";
+import { POINTS_MAP } from "@/constants";
 
 export async function incrementPlayerStat(
   playerId: string,

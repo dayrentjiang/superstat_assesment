@@ -1,5 +1,5 @@
 import { createServerClient } from "@/lib/supabase";
-import { Video } from "@/lib/types";
+import { Video } from "@/types";
 
 export async function findAllVideos(): Promise<Video[]> {
   const supabase = createServerClient();

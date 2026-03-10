@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Video } from "@/lib/types";
+import { Video } from "@/types";
 import { deleteVideo } from "@/actions/videos";
 import { format } from "date-fns";
 import { ChevronRight, Trash2 } from "lucide-react";

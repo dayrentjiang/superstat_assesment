@@ -11,9 +11,23 @@ export const EVENT_TYPES = [
   "Foul",
   "Free Throw Made",
   "Free Throw Missed",
+  "Timeout",
+  "Jump Ball",
+  "Shotclock Violation",
+  "End of Quarter",
+  "End of Game",
 ] as const;
 
 export type EventType = (typeof EVENT_TYPES)[number];
+
+/** Event types that belong to the team rather than a specific player */
+export const TEAM_EVENT_TYPES: ReadonlySet<string> = new Set([
+  "Timeout",
+  "Jump Ball",
+  "Shotclock Violation",
+  "End of Quarter",
+  "End of Game",
+]);
 
 /** Points scored per occurrence of each event type */
 export const POINTS_MAP: Partial<Record<EventType, number>> = {

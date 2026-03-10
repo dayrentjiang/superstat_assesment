@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Event } from "@/lib/types";
+import { Event } from "@/types";
 import { generateSummary } from "@/actions/summary";
 import { Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 
