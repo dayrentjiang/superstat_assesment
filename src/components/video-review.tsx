@@ -12,9 +12,10 @@ interface VideoReviewProps {
   players: Player[];
 }
 
-export function VideoReview({ video, initialEvents, players }: VideoReviewProps) {
+export function VideoReview({ video, initialEvents, players: initialPlayers }: VideoReviewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [events, setEvents] = useState(initialEvents);
+  const [players, setPlayers] = useState(initialPlayers);
 
   function getCurrentTime() {
     return videoRef.current?.currentTime ?? 0;
@@ -36,6 +37,10 @@ export function VideoReview({ video, initialEvents, players }: VideoReviewProps)
     setEvents((prev) => prev.filter((e) => e.id !== id));
   }
 
+  function handlePlayerAdded(player: Player) {
+    setPlayers((prev) => [...prev, player].sort((a, b) => a.name.localeCompare(b.name)));
+  }
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">{video.title}</h1>
@@ -50,6 +55,7 @@ export function VideoReview({ video, initialEvents, players }: VideoReviewProps)
               players={players}
               getCurrentTime={getCurrentTime}
               onEventCreated={handleEventCreated}
+              onPlayerAdded={handlePlayerAdded}
             />
           </div>
         </div>

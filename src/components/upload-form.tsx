@@ -2,43 +2,30 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 import { createVideo } from "@/actions/videos";
+import { useUpload } from "@/hooks/use-upload";
 
 export function UploadForm() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const videoUpload = useUpload("videos");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!file || !title.trim()) return;
 
-    setUploading(true);
     setError("");
 
     try {
-      // Upload to Supabase Storage
-      const fileName = `${Date.now()}-${file.name}`;
-      const { error: uploadError } = await supabase.storage
-        .from("videos")
-        .upload(fileName, file, { contentType: file.type });
+      const publicUrl = await videoUpload.upload(file);
+      if (!publicUrl) throw new Error(videoUpload.error ?? "Upload failed");
 
-      if (uploadError) throw uploadError;
-
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from("videos")
-        .getPublicUrl(fileName);
-
-      // Create video record
-      const video = await createVideo(title.trim(), urlData.publicUrl);
+      const video = await createVideo(title.trim(), publicUrl);
       router.push(`/videos/${video.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
-      setUploading(false);
     }
   }
 
@@ -68,10 +55,10 @@ export function UploadForm() {
       {error && <p className="text-red-600 text-sm">{error}</p>}
       <button
         type="submit"
-        disabled={uploading || !file || !title.trim()}
+        disabled={videoUpload.uploading || !file || !title.trim()}
         className="rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
       >
-        {uploading ? "Uploading..." : "Upload"}
+        {videoUpload.uploading ? "Uploading..." : "Upload"}
       </button>
     </form>
   );

@@ -1,6 +1,8 @@
 export const EVENT_TYPES = [
-  "Shot Made",
-  "Shot Missed",
+  "2pt made",
+  "2pt missed",
+  "3pt made",
+  "3pt missed",
   "Assist",
   "Rebound",
   "Turnover",
