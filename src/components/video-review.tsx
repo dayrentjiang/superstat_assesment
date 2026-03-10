@@ -5,14 +5,16 @@ import { Video, Player, Event } from "@/lib/types";
 import { VideoPlayer } from "./video-player";
 import { EventForm } from "./event-form";
 import { EventList } from "./event-list";
+import { MatchSummary } from "./match-summary";
 
 interface VideoReviewProps {
   video: Video;
   initialEvents: Event[];
   players: Player[];
+  initialSummary: string | null;
 }
 
-export function VideoReview({ video, initialEvents, players: initialPlayers }: VideoReviewProps) {
+export function VideoReview({ video, initialEvents, players: initialPlayers, initialSummary }: VideoReviewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [events, setEvents] = useState(initialEvents);
   const [players, setPlayers] = useState(initialPlayers);
@@ -73,6 +75,14 @@ export function VideoReview({ video, initialEvents, players: initialPlayers }: V
           />
         </div>
       </div>
+
+      {/* AI Match Summary */}
+      <MatchSummary
+        events={events}
+        videoId={video.id}
+        videoTitle={video.title}
+        initialSummary={initialSummary}
+      />
     </div>
   );
 }
