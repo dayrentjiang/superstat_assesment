@@ -1,6 +1,6 @@
 import { getVideos } from "@/actions/videos";
-import { VideoCard } from "@/components/videos/video-card";
-import { ArrowUpRight, Video } from "lucide-react";
+import { VideoList } from "@/components/videos/video-list";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
 export default async function LibraryPage() {
@@ -26,18 +26,7 @@ export default async function LibraryPage() {
 
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Matches</h2>
-        {videos.length === 0 ? (
-          <div className="bg-white p-8 rounded-xl border border-gray-200 text-center text-gray-500 shadow-sm">
-            <Video className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-            <p>No matches yet. Upload a game to get started.</p>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {videos.map((video) => (
-              <VideoCard key={video.id} video={video} />
-            ))}
-          </div>
-        )}
+        <VideoList initialVideos={videos} />
       </div>
     </div>
   );
