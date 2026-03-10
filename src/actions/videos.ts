@@ -29,4 +29,5 @@ export async function createVideo(
 export async function deleteVideo(id: string): Promise<void> {
   await removeVideo(id);
   revalidatePath("/");
+  revalidatePath("/players");
 }

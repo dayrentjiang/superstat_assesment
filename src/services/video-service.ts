@@ -6,7 +6,6 @@ export async function findAllVideos(): Promise<Video[]> {
   const { data, error } = await supabase
     .from("videos")
     .select("*")
-    .is("deleted_at", null)
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -19,7 +18,6 @@ export async function findVideoById(id: string): Promise<Video | null> {
     .from("videos")
     .select("*")
     .eq("id", id)
-    .is("deleted_at", null)
     .single();
 
   if (error) return null;
@@ -30,7 +28,7 @@ export async function removeVideo(id: string): Promise<void> {
   const supabase = createServerClient();
   const { error } = await supabase
     .from("videos")
-    .update({ deleted_at: new Date().toISOString() })
+    .delete()
     .eq("id", id);
   if (error) throw error;
 }

@@ -13,11 +13,8 @@ CREATE TABLE videos (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   title TEXT NOT NULL,
   video_url TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT now(),
-  deleted_at TIMESTAMPTZ DEFAULT NULL
+  created_at TIMESTAMPTZ DEFAULT now()
 );
-
-CREATE INDEX idx_videos_deleted_at ON videos(deleted_at);
 
 -- ============================================================
 -- 2. Players table
