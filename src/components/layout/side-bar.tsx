@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { Video, Users, Zap } from "lucide-react";
+import Image from "next/image";
+import { Video, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function SideBar({ isMobile }: { isMobile?: boolean }) {
@@ -14,12 +15,16 @@ export function SideBar({ isMobile }: { isMobile?: boolean }) {
     >
       <div className="p-4 border-b border-gray-100 mb-2 mt-4 md:mt-0">
         <div className="flex items-center gap-3">
-          <div className="bg-black text-white p-2 rounded-md">
-            <Zap className="w-5 h-5" />
-          </div>
+          <Image
+            src="/gsw-logo.svg"
+            alt="Golden State Warriors"
+            width={36}
+            height={36}
+            className="rounded-md"
+          />
           <div>
-            <div className="font-semibold text-sm">Superstat</div>
-            <div className="text-xs text-gray-500">Team</div>
+            <div className="font-semibold text-sm">Golden State Warriors</div>
+            <div className="text-xs text-gray-500">NBA Team</div>
           </div>
         </div>
       </div>
