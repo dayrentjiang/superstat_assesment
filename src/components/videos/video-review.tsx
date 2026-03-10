@@ -51,14 +51,28 @@ export function VideoReview({
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">{video.title}</h1>
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Video + Event Form */}
-        <div className="lg:col-span-2 space-y-4">
-          <VideoPlayer ref={videoRef} src={video.video_url} />
-          <div className="rounded-lg border bg-white p-4">
-            <h2 className="font-medium mb-3">Tag Event</h2>
+    <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">{video.title}</h1>
+      </div>
+
+      {/* AI Match Summary */}
+      <MatchSummary
+        events={events}
+        videoId={video.id}
+        videoTitle={video.title}
+        initialSummary={initialSummary}
+      />
+
+      <div className="flex flex-col xl:flex-row gap-6">
+        {/* Main Timeline Column */}
+        <div className="flex-1 flex flex-col gap-6">
+          <div className="rounded-xl overflow-hidden bg-black shadow-lg border border-gray-800">
+            <VideoPlayer ref={videoRef} src={video.video_url} />
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Tag Event</h2>
             <EventForm
               videoId={video.id}
               players={players}
@@ -69,25 +83,25 @@ export function VideoReview({
           </div>
         </div>
 
-        {/* Event List */}
-        <div className="rounded-lg border bg-white p-4">
-          <h2 className="font-medium mb-3">Events ({events.length})</h2>
-          <EventList
-            events={events}
-            videoId={video.id}
-            onSeek={handleSeek}
-            onEventDeleted={handleEventDeleted}
-          />
+        {/* Sidebar Event List */}
+        <div className="xl:w-96 shrink-0 flex flex-col gap-4 bg-white rounded-xl border border-gray-200 p-5 shadow-sm h-fit xl:sticky xl:top-28 xl:max-h-[calc(100vh-120px)] overflow-hidden">
+          <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+            <h2 className="text-lg font-bold text-gray-900">Timeline</h2>
+            <span className="bg-teal-50 text-teal-700 font-bold text-xs px-2.5 py-1 rounded-full">
+              {events.length} Events
+            </span>
+          </div>
+
+          <div className="flex-1 overflow-y-auto pr-2 -mr-2">
+            <EventList
+              events={events}
+              videoId={video.id}
+              onSeek={handleSeek}
+              onEventDeleted={handleEventDeleted}
+            />
+          </div>
         </div>
       </div>
-
-      {/* AI Match Summary */}
-      <MatchSummary
-        events={events}
-        videoId={video.id}
-        videoTitle={video.title}
-        initialSummary={initialSummary}
-      />
     </div>
   );
 }

@@ -17,5 +17,5 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
         preload="metadata"
       />
     );
-  }
+  },
 );
