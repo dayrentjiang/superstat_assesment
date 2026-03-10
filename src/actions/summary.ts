@@ -3,19 +3,14 @@
 import { Event, Summary } from "@/lib/types";
 import { formatTimestamp } from "@/lib/constants";
 import { chat } from "@/lib/openai";
-import { createServerClient } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
+import {
+  findSummaryByVideoId,
+  upsertSummary,
+} from "@/services/summary-service";
 
 export async function getSummary(videoId: string): Promise<Summary | null> {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from("summaries")
-    .select("*")
-    .eq("video_id", videoId)
-    .maybeSingle();
-
-  if (error) throw error;
-  return data as Summary | null;
+  return findSummaryByVideoId(videoId);
 }
 
 const SYSTEM_PROMPT = `You are a basketball analyst. Summarize this game based on the tagged events. Use markdown but NEVER use headings (#, ##, ###). Use **bold text** for section labels instead.
@@ -67,14 +62,7 @@ ${eventLines.join("\n")}`;
     return "Failed to generate summary. Please try again.";
   }
 
-  // Save to database (upsert by video_id)
-  const supabase = createServerClient();
-  await supabase
-    .from("summaries")
-    .upsert(
-      { video_id: videoId, content, updated_at: new Date().toISOString() },
-      { onConflict: "video_id" },
-    );
+  await upsertSummary(videoId, content);
 
   revalidatePath(`/videos/${videoId}`);
   return content;

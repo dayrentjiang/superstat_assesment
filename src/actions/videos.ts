@@ -1,41 +1,32 @@
 "use server";
 
-import { createServerClient } from "@/lib/supabase";
 import { Video } from "@/lib/types";
 import { revalidatePath } from "next/cache";
+import {
+  findAllVideos,
+  findVideoById,
+  insertVideo,
+  removeVideo,
+} from "@/services/video-service";
 
 export async function getVideos(): Promise<Video[]> {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from("videos")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (error) throw error;
-  return data as Video[];
+  return findAllVideos();
 }
 
 export async function getVideoById(id: string): Promise<Video | null> {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from("videos")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error) return null;
-  return data as Video;
+  return findVideoById(id);
 }
 
-export async function createVideo(title: string, videoUrl: string): Promise<Video> {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from("videos")
-    .insert({ title, video_url: videoUrl })
-    .select()
-    .single();
-
-  if (error) throw error;
+export async function createVideo(
+  title: string,
+  videoUrl: string,
+): Promise<Video> {
+  const video = await insertVideo(title, videoUrl);
   revalidatePath("/");
-  return data as Video;
+  return video;
+}
+
+export async function deleteVideo(id: string): Promise<void> {
+  await removeVideo(id);
+  revalidatePath("/");
 }

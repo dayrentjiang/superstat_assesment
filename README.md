@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Superstat
 
-## Getting Started
+Basketball video analysis tool. Upload game footage, tag events at timestamps, track player stats, and generate AI match summaries.
 
-First, run the development server:
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Database:** Supabase (PostgreSQL)
+- **Storage:** Supabase Storage (videos, avatars)
+- **AI:** OpenAI GPT-4o (match summaries)
+- **Styling:** Tailwind CSS 4
+- **Deployment:** Vercel (Sydney region)
+
+## Prerequisites
+
+- Node.js 18+
+- A [Supabase](https://supabase.com) project
+- An [OpenAI](https://platform.openai.com) API key
+
+## Setup
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure environment variables
+
+Create a `.env.local` file in the project root:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+OPENAI_API_KEY=your-openai-api-key
+```
+
+### 3. Set up the database
+
+Go to your Supabase dashboard > **SQL Editor** and run the contents of:
+
+```
+supabase/complete_schema.sql
+```
+
+This creates all tables (videos, players, events, summaries, player_stats) with RLS policies and indexes.
+
+### 4. Create storage buckets
+
+In your Supabase dashboard > **Storage**, create two public buckets:
+
+- `videos`
+- `avatars`
+
+### 5. Run the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+  app/                  # Next.js routes
+    page.tsx            # Home — video library
+    upload/             # Video upload page
+    players/            # Player roster
+    players/[id]/       # Player detail + stats
+    videos/[id]/        # Video review + event tagging
+  actions/              # Server actions (controllers)
+  services/             # Database service layer
+  components/
+    events/             # Event form, event list, match summary
+    players/            # Player manager, player detail, add dialog
+    videos/             # Video card, video player, video review
+    layout/             # Navbar, sidebar
+  hooks/                # Custom hooks (file upload)
+  lib/                  # Supabase client, types, constants, OpenAI
+supabase/
+  migrations/           # Individual migration files (001–006)
+  complete_schema.sql   # Full schema for fresh setup
+```
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Push to a GitHub repo and connect it to [Vercel](https://vercel.com). Add the same environment variables in the Vercel project settings. The `vercel.json` is configured to deploy to the Sydney (`syd1`) region.

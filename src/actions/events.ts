@@ -1,48 +1,48 @@
 "use server";
 
-import { createServerClient } from "@/lib/supabase";
-import { Event } from "@/lib/types";
+import { Event, PlayerGameRow } from "@/lib/types";
 import { revalidatePath } from "next/cache";
+import {
+  findEventsByVideoId,
+  findEventById,
+  insertEvent,
+  removeEvent,
+} from "@/services/event-service";
+import {
+  incrementPlayerStat,
+  decrementPlayerStat,
+  getPlayerGames as getPlayerGamesFromService,
+} from "@/services/player-stats-service";
 
 export async function getEventsByVideoId(videoId: string): Promise<Event[]> {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from("events")
-    .select("*, player:players(*)")
-    .eq("video_id", videoId)
-    .order("timestamp");
+  return findEventsByVideoId(videoId);
+}
 
-  if (error) throw error;
-  return data as Event[];
+export async function getPlayerGames(
+  playerId: string,
+): Promise<PlayerGameRow[]> {
+  return getPlayerGamesFromService(playerId);
 }
 
 export async function createEvent(
   videoId: string,
   playerId: string,
   eventType: string,
-  timestamp: number
+  timestamp: number,
 ): Promise<Event> {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from("events")
-    .insert({
-      video_id: videoId,
-      player_id: playerId,
-      event_type: eventType,
-      timestamp,
-    })
-    .select("*, player:players(*)")
-    .single();
+  const event = await insertEvent(videoId, playerId, eventType, timestamp);
+  await incrementPlayerStat(playerId, videoId, eventType);
 
-  if (error) throw error;
   revalidatePath(`/videos/${videoId}`);
-  return data as Event;
+  revalidatePath(`/players/${playerId}`);
+  return event;
 }
 
 export async function deleteEvent(id: string, videoId: string): Promise<void> {
-  const supabase = createServerClient();
-  const { error } = await supabase.from("events").delete().eq("id", id);
+  const event = await findEventById(id);
+  await removeEvent(id);
+  await decrementPlayerStat(event.player_id, videoId, event.event_type);
 
-  if (error) throw error;
   revalidatePath(`/videos/${videoId}`);
+  revalidatePath(`/players/${event.player_id}`);
 }

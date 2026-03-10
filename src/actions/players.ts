@@ -1,45 +1,49 @@
 "use server";
 
-import { createServerClient } from "@/lib/supabase";
-import { Player } from "@/lib/types";
+import { Player, PlayerStats } from "@/lib/types";
 import { revalidatePath } from "next/cache";
+import {
+  findAllPlayers,
+  findPlayerById,
+  insertPlayer,
+  updatePlayer as updatePlayerInDb,
+  removePlayer,
+} from "@/services/player-service";
+import { getAggregatedStats } from "@/services/player-stats-service";
 
 export async function getPlayers(): Promise<Player[]> {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from("players")
-    .select("*")
-    .order("name");
-
-  if (error) throw error;
-  return data as Player[];
+  return findAllPlayers();
 }
 
 export async function createPlayer(
   name: string,
   avatarUrl?: string | null,
-  position?: string | null
+  position?: string | null,
 ): Promise<Player> {
-  const supabase = createServerClient();
-  const insert: Record<string, unknown> = { name: name.trim() };
-  if (avatarUrl) insert.avatar_url = avatarUrl;
-  if (position) insert.position = position;
-
-  const { data, error } = await supabase
-    .from("players")
-    .insert(insert)
-    .select()
-    .single();
-
-  if (error) throw error;
+  const player = await insertPlayer(name, avatarUrl, position);
   revalidatePath("/players");
-  return data as Player;
+  return player;
+}
+
+export async function updatePlayer(
+  id: string,
+  fields: { name?: string; position?: string | null; avatar_url?: string | null },
+): Promise<Player> {
+  const player = await updatePlayerInDb(id, fields);
+  revalidatePath("/players");
+  revalidatePath(`/players/${id}`);
+  return player;
 }
 
 export async function deletePlayer(id: string): Promise<void> {
-  const supabase = createServerClient();
-  const { error } = await supabase.from("players").delete().eq("id", id);
-
-  if (error) throw error;
+  await removePlayer(id);
   revalidatePath("/players");
+}
+
+export async function getPlayerById(id: string): Promise<Player | null> {
+  return findPlayerById(id);
+}
+
+export async function getPlayerStats(playerId: string): Promise<PlayerStats> {
+  return getAggregatedStats(playerId);
 }
