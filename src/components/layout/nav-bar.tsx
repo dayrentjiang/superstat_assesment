@@ -12,10 +12,7 @@ export function NavBar() {
     <>
       <div className="flex flex-col relative z-50">
         <div className="bg-[#1a1c29] text-white text-sm py-2 flex justify-center items-center gap-2">
-          You're viewing a read-only demo{" "}
-          <span className="bg-[#18e89d] text-black px-3 py-1 rounded-full text-xs font-semibold">
-            Sign up
-          </span>
+          You're trying Basketball best Video Analysis tool{" "}
         </div>
         <nav className="bg-[#18e89d] text-black h-16 px-4 md:px-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -29,7 +26,6 @@ export function NavBar() {
                 <Menu className="h-6 w-6 cursor-pointer" />
               )}
             </button>
-            <Menu className="h-6 w-6 cursor-pointer hidden md:block" />
             <Link href="/" className="font-extrabold text-2xl tracking-tight">
               superstat
             </Link>
