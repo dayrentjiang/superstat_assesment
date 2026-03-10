@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { Player } from "@/lib/types";
 import { createPlayer, deletePlayer } from "@/actions/players";
 import { useUpload } from "@/hooks/use-upload";
@@ -120,25 +121,30 @@ export function PlayerManager({ initialPlayers }: { initialPlayers: Player[] }) 
           {players.map((player) => (
             <div
               key={player.id}
-              className="flex items-center gap-3 rounded-lg border bg-white px-4 py-3"
+              className="flex items-center gap-3 rounded-lg border bg-white px-4 py-3 hover:border-blue-300 transition-colors"
             >
-              {player.avatar_url ? (
-                <img
-                  src={player.avatar_url}
-                  alt={player.name}
-                  className="h-10 w-10 rounded-full object-cover"
-                />
-              ) : (
-                <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm font-medium">
-                  {player.name.charAt(0).toUpperCase()}
-                </div>
-              )}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{player.name}</p>
-                {player.position && (
-                  <p className="text-xs text-gray-500">{player.position}</p>
+              <Link
+                href={`/players/${player.id}`}
+                className="flex items-center gap-3 flex-1 min-w-0"
+              >
+                {player.avatar_url ? (
+                  <img
+                    src={player.avatar_url}
+                    alt={player.name}
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm font-medium">
+                    {player.name.charAt(0).toUpperCase()}
+                  </div>
                 )}
-              </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{player.name}</p>
+                  {player.position && (
+                    <p className="text-xs text-gray-500">{player.position}</p>
+                  )}
+                </div>
+              </Link>
               <button
                 onClick={() => handleDelete(player.id)}
                 disabled={isPending}
