@@ -2,7 +2,7 @@ import { getVideoById } from "@/actions/videos";
 import { getEventsByVideoId } from "@/actions/events";
 import { getSummary } from "@/actions/summary";
 import { getPlayers } from "@/actions/players";
-import { VideoReview } from "@/components/video-review";
+import { VideoReview } from "@/components/videos/video-review";
 import { notFound } from "next/navigation";
 
 export default async function VideoReviewPage({

@@ -1,5 +1,5 @@
 import { getPlayers } from "@/actions/players";
-import { PlayerManager } from "@/components/player-manager";
+import { PlayerManager } from "@/components/players/player-manager";
 
 export default async function PlayersPage() {
   const players = await getPlayers();

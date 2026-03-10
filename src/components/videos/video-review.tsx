@@ -3,9 +3,9 @@
 import { useRef, useState } from "react";
 import { Video, Player, Event } from "@/lib/types";
 import { VideoPlayer } from "./video-player";
-import { EventForm } from "./event-form";
-import { EventList } from "./event-list";
-import { MatchSummary } from "./match-summary";
+import { EventForm } from "@/components/events/event-form";
+import { EventList } from "@/components/events/event-list";
+import { MatchSummary } from "@/components/events/match-summary";
 
 interface VideoReviewProps {
   video: Video;
@@ -14,7 +14,12 @@ interface VideoReviewProps {
   initialSummary: string | null;
 }
 
-export function VideoReview({ video, initialEvents, players: initialPlayers, initialSummary }: VideoReviewProps) {
+export function VideoReview({
+  video,
+  initialEvents,
+  players: initialPlayers,
+  initialSummary,
+}: VideoReviewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [events, setEvents] = useState(initialEvents);
   const [players, setPlayers] = useState(initialPlayers);
@@ -31,7 +36,7 @@ export function VideoReview({ video, initialEvents, players: initialPlayers, ini
 
   function handleEventCreated(event: Event) {
     setEvents((prev) =>
-      [...prev, event].sort((a, b) => a.timestamp - b.timestamp)
+      [...prev, event].sort((a, b) => a.timestamp - b.timestamp),
     );
   }
 
@@ -40,7 +45,9 @@ export function VideoReview({ video, initialEvents, players: initialPlayers, ini
   }
 
   function handlePlayerAdded(player: Player) {
-    setPlayers((prev) => [...prev, player].sort((a, b) => a.name.localeCompare(b.name)));
+    setPlayers((prev) =>
+      [...prev, player].sort((a, b) => a.name.localeCompare(b.name)),
+    );
   }
 
   return (
@@ -64,9 +71,7 @@ export function VideoReview({ video, initialEvents, players: initialPlayers, ini
 
         {/* Event List */}
         <div className="rounded-lg border bg-white p-4">
-          <h2 className="font-medium mb-3">
-            Events ({events.length})
-          </h2>
+          <h2 className="font-medium mb-3">Events ({events.length})</h2>
           <EventList
             events={events}
             videoId={video.id}

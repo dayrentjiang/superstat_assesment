@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPlayerById, getPlayerStats } from "@/actions/players";
 import { getPlayerGames } from "@/actions/events";
-import { PlayerDetail } from "@/components/player-detail";
+import { PlayerDetail } from "@/components/players/player-detail";
 import Link from "next/link";
 
 export default async function PlayerPage({
