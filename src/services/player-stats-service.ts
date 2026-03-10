@@ -17,14 +17,16 @@ export async function incrementPlayerStat(
     .single();
 
   if (existing) {
-    await supabase
+    const { error } = await supabase
       .from("player_stats")
       .update({ count: existing.count + 1 })
       .eq("id", existing.id);
+    if (error) throw error;
   } else {
-    await supabase
+    const { error } = await supabase
       .from("player_stats")
       .insert({ player_id: playerId, video_id: videoId, event_type: eventType, count: 1 });
+    if (error) throw error;
   }
 }
 
@@ -44,12 +46,14 @@ export async function decrementPlayerStat(
 
   if (stats) {
     if (stats.count <= 1) {
-      await supabase.from("player_stats").delete().eq("id", stats.id);
+      const { error } = await supabase.from("player_stats").delete().eq("id", stats.id);
+      if (error) throw error;
     } else {
-      await supabase
+      const { error } = await supabase
         .from("player_stats")
         .update({ count: stats.count - 1 })
         .eq("id", stats.id);
+      if (error) throw error;
     }
   }
 }

@@ -40,6 +40,9 @@ export async function createEvent(
 
 export async function deleteEvent(id: string, videoId: string): Promise<void> {
   const event = await findEventById(id);
+  if (!event) {
+    throw new Error(`Event not found: ${id}`);
+  }
   await removeEvent(id);
   await decrementPlayerStat(event.player_id, videoId, event.event_type);
 
