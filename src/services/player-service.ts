@@ -29,13 +29,28 @@ export async function findPlayerById(id: string): Promise<Player | null> {
   return data as Player;
 }
 
+/** Returns true if a player row exists but has been soft-deleted */
+export async function isPlayerDeleted(id: string): Promise<boolean> {
+  const supabase = createServerClient();
+  const { data } = await supabase
+    .from("players")
+    .select("id, deleted_at")
+    .eq("id", id)
+    .not("deleted_at", "is", null)
+    .single();
+
+  return !!data;
+}
+
 export async function insertPlayer(
   name: string,
   avatarUrl?: string | null,
   position?: string | null
 ): Promise<Player> {
   const supabase = createServerClient();
-  const insert: Record<string, unknown> = { name: name.trim() };
+  const trimmedName = name.trim();
+
+  const insert: Record<string, unknown> = { name: trimmedName };
   if (avatarUrl) insert.avatar_url = avatarUrl;
   if (position) insert.position = position;
 

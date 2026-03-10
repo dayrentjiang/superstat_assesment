@@ -8,6 +8,7 @@ import {
   insertPlayer,
   updatePlayer as updatePlayerInDb,
   removePlayer,
+  isPlayerDeleted,
 } from "@/services/player-service";
 import { getAggregatedStats } from "@/services/player-stats-service";
 
@@ -46,4 +47,8 @@ export async function getPlayerById(id: string): Promise<Player | null> {
 
 export async function getPlayerStats(playerId: string): Promise<PlayerStats> {
   return getAggregatedStats(playerId);
+}
+
+export async function checkPlayerDeleted(id: string): Promise<boolean> {
+  return isPlayerDeleted(id);
 }
