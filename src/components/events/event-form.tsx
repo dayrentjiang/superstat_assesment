@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { Player, Event } from "@/lib/types";
 import { EVENT_TYPES } from "@/lib/constants";
 import { createEvent } from "@/actions/events";
@@ -60,12 +61,12 @@ export function EventForm({
           No players exist in your roster yet.
         </p>
         <div className="flex items-center justify-center gap-4 text-sm">
-          <a
+          <Link
             href="/players"
             className="text-teal-600 hover:text-teal-800 font-semibold underline underline-offset-2"
           >
             Manage Roster
-          </a>
+          </Link>
           <span className="text-gray-300">|</span>
           <button
             onClick={() => setDialogOpen(true)}

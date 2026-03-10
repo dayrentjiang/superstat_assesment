@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, useRef, useEffect } from "react";
+import Image from "next/image";
 import { Player } from "@/lib/types";
 import { createPlayer } from "@/actions/players";
 import { useUpload } from "@/hooks/use-upload";
@@ -138,9 +139,12 @@ export function AddPlayerDialog({ open, onClose, onPlayerCreated }: Props) {
             </label>
             <div className="flex items-center gap-3">
               {avatarPreview ? (
-                <img
+                <Image
                   src={avatarPreview}
                   alt="Preview"
+                  width={40}
+                  height={40}
+                  unoptimized
                   className="h-10 w-10 rounded-full object-cover border border-gray-200 shrink-0"
                 />
               ) : (

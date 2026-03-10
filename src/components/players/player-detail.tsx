@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Player, PlayerStats, PlayerGameRow } from "@/lib/types";
 import { updatePlayer } from "@/actions/players";
 import { useUpload } from "@/hooks/use-upload";
@@ -88,9 +89,12 @@ function PlayerHeader({ player }: { player: Player }) {
     <div className="flex items-center gap-4">
       <div className="relative">
         {displayAvatar ? (
-          <img
+          <Image
             src={displayAvatar}
             alt={currentPlayer.name}
+            width={80}
+            height={80}
+            unoptimized
             className="h-20 w-20 rounded-full object-cover"
           />
         ) : (

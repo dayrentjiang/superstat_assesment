@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import Image from "next/image";
 import { Event } from "@/lib/types";
 import { formatTimestamp } from "@/lib/constants";
 import { deleteEvent } from "@/actions/events";
@@ -56,9 +57,11 @@ export function EventList({ events, videoId, onSeek, onEventDeleted }: EventList
               <td className="py-2 pr-2">
                 <div className="flex items-center gap-1.5">
                   {event.player?.avatar_url ? (
-                    <img
+                    <Image
                       src={event.player.avatar_url}
                       alt=""
+                      width={20}
+                      height={20}
                       className="h-5 w-5 rounded-full object-cover"
                     />
                   ) : (

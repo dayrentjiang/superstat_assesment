@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Player } from "@/lib/types";
 import { deletePlayer } from "@/actions/players";
 import { AddPlayerDialog } from "@/components/players/add-player-dialog";
@@ -98,9 +99,11 @@ export function PlayerManager({
               >
                 <div className="relative shrink-0">
                   {player.avatar_url ? (
-                    <img
+                    <Image
                       src={player.avatar_url}
                       alt={player.name}
+                      width={56}
+                      height={56}
                       className="h-14 w-14 rounded-full object-cover border-2 border-gray-100 group-hover:border-teal-100 transition-colors"
                     />
                   ) : (
