@@ -6,6 +6,7 @@ import {
   findAllVideos,
   findVideoById,
   insertVideo,
+  removeVideo,
 } from "@/services/video-service";
 
 export async function getVideos(): Promise<Video[]> {
@@ -23,4 +24,9 @@ export async function createVideo(
   const video = await insertVideo(title, videoUrl);
   revalidatePath("/");
   return video;
+}
+
+export async function deleteVideo(id: string): Promise<void> {
+  await removeVideo(id);
+  revalidatePath("/");
 }

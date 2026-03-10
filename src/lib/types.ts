@@ -3,6 +3,7 @@ export interface Video {
   title: string;
   video_url: string;
   created_at: string;
+  deleted_at: string | null;
 }
 
 export interface Player {

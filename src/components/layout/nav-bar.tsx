@@ -35,9 +35,12 @@ export function NavBar() {
             </Link>
           </div>
           <div className="flex items-center gap-6">
-            <div className="h-8 w-8 bg-black text-white rounded-full flex items-center justify-center font-bold text-sm">
-              U
-            </div>
+            <Link
+              href="/upload"
+              className="px-4 py-1.5 bg-black text-white hover:bg-gray-800 rounded-full font-bold text-sm transition-colors"
+            >
+              Upload Video
+            </Link>
           </div>
         </nav>
       </div>
