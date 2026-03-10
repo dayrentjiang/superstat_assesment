@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Event } from "@/lib/types";
 import { formatTimestamp } from "@/lib/constants";
 import { deleteEvent } from "@/actions/events";
@@ -55,7 +56,10 @@ export function EventList({ events, videoId, onSeek, onEventDeleted }: EventList
                 </span>
               </td>
               <td className="py-2 pr-2">
-                <div className="flex items-center gap-1.5">
+                <Link
+                  href={`/players/${event.player_id}`}
+                  className="flex items-center gap-1.5 hover:underline"
+                >
                   {event.player?.avatar_url ? (
                     <Image
                       src={event.player.avatar_url}
@@ -70,7 +74,7 @@ export function EventList({ events, videoId, onSeek, onEventDeleted }: EventList
                     </div>
                   )}
                   <span>{event.player?.name ?? "Unknown"}</span>
-                </div>
+                </Link>
               </td>
               <td className="py-2">
                 <button
